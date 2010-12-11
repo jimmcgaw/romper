@@ -1,0 +1,31 @@
+The romper.js JavaScript library is intended to be an Object-Relational Mapper (ORM) between JavaScript object instances and the HTML5 Web Storage specification.
+
+Currently in development. It's recommended that this be used with Google's Chromium browser, which offers a JavaScript console and an interface to Web Storage DB tables.
+
+Example usage:
+
+// create a JavaScript function declaration
+var Animal = function(name, type, words){
+    // must set this property as DB table name
+    this._db_table = 'animals';
+    
+    // declare fields
+    this.name = name;
+    this.type = type;
+    this.words = words;
+
+    // finally, call this to create table if
+    // it doesn't exist already.
+    this.init();
+};
+
+// then call this function
+Romper.romperfy(Animal);
+
+// now, create instances
+var rover = Animal('Rover', 'Dog', 'Woof!');
+var max = Animal('Max', 'Cat', 'Meow!');
+
+// then, call the save() function on each to commit to database
+rover.save() // executes INSERT SQL
+max.save()  // executes INSERT SQL
