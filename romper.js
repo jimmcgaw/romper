@@ -73,7 +73,6 @@ Romper.Model.prototype = {
 			}
 		}
 		sql += ');';
-		alert(sql);
 		
 		var db = Romper.openDatabase();
 		db.transaction(
@@ -98,7 +97,6 @@ Romper.Model.prototype = {
 		}
 		sql += ');'
 		sql = sql.supplant(this);
-		alert(sql);
 		
 		var db = Romper.openDatabase();
 		db.transaction(
@@ -109,17 +107,19 @@ Romper.Model.prototype = {
 	},
 	
 	update: function(){
-		for(var i = 0, len = arguments.length; i < len; i++){
-			alert(arguments[i]);
-		}
+		//for(var i = 0, len = arguments.length; i < len; i++){
+		//	alert(arguments[i]);
+		//}
 	},
 	
 	remove: function(){
 		// remove object from localStorage
 	},
+	
 	getDbTable: function(){
 		return this._db_table;
 	},
+	
 	getProperties: function(){
 		var properties = [];
 		for (var prop in this){
@@ -129,7 +129,7 @@ Romper.Model.prototype = {
 		}
 		return properties;
 	}
-}
+};
 
 /* Extend function */
 function extend(subClass, superClass) {
@@ -147,4 +147,32 @@ function extend(subClass, superClass) {
 // method that forces a class to inherit from Romper.Model
 Romper.romperfy = function(subClass){
 	extend(subClass, Romper.Model);
+	
+	subClass.getById = function(id){
+		var sc = new subClass();
+		var sql = '';
+		sql += 'SELECT * FROM ' + sc._db_table + ' WHERE id = ' + id.toString() + ';';
+		alert(sql);
+		var db = Romper.openDatabase();
+		
+		// problem with scope here...row is not returning the object from DB.
+		var row;
+		
+		db.transaction(
+			function(t){
+				t.executeSql(
+					sql,
+					[],
+					function(trans, result){
+						for ( var i = 0, len = result.rows.length; i < len; i=i+1){
+							row = result.rows.item(i);
+							alert(row.toString());
+						}
+					}
+				);
+			}
+		);
+		
+		return row;
+	}
 };
